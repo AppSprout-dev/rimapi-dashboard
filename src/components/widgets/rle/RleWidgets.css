@@ -1,0 +1,353 @@
+/* Shared styles for RLE dashboard widgets */
+
+.rle-empty {
+  color: #666;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+/* Agent Decision Log */
+.rle-agent-log {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.rle-agent-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.rle-agent-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.rle-agent-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.75rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.rle-agent-badge-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  font-weight: bold;
+  font-size: 0.65rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.rle-agent-role {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  flex: 1;
+}
+
+.rle-agent-confidence {
+  font-size: 0.8rem;
+  color: #aaa;
+  font-weight: bold;
+}
+
+.rle-agent-summary {
+  font-size: 0.78rem;
+  color: #bbb;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.rle-agent-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.rle-action-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+}
+
+.rle-action-type {
+  color: #ccc;
+  font-family: monospace;
+}
+
+.rle-action-target {
+  color: #888;
+}
+
+.rle-action-priority {
+  color: #666;
+  font-size: 0.65rem;
+}
+
+.rle-no-actions {
+  color: #555;
+  font-size: 0.7rem;
+  font-style: italic;
+}
+
+/* Score Timeline */
+.rle-chart-container {
+  padding: 8px;
+  height: 250px;
+  position: relative;
+}
+
+/* Conflict Resolution */
+.rle-conflict {
+  padding: 10px;
+}
+
+.rle-conflict-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.rle-conflict-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rle-conflict-value {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.rle-conflict-label {
+  font-size: 0.7rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.rle-conflict-arrow {
+  color: #555;
+  font-size: 1.2rem;
+}
+
+.rle-conflict-dropped .rle-conflict-value {
+  color: #F44336;
+}
+
+.rle-conflict-agents {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rle-conflict-agent-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rle-conflict-bar-container {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rle-conflict-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.rle-conflict-count {
+  font-size: 0.75rem;
+  color: #aaa;
+  width: 20px;
+  text-align: right;
+}
+
+/* Helix Phase */
+.rle-helix {
+  padding: 10px;
+}
+
+.rle-helix-track {
+  position: relative;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.rle-helix-phase {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 4px;
+}
+
+.rle-helix-progress {
+  position: absolute;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  border-radius: 2px;
+  z-index: 2;
+}
+
+.rle-helix-agent {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.rle-helix-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.rle-helix-labels {
+  position: relative;
+  height: 20px;
+  margin-bottom: 8px;
+}
+
+.rle-helix-label {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rle-helix-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rle-helix-phase-name {
+  font-weight: bold;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.rle-helix-progress-pct {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* Agent Status Panel */
+.rle-status-panel {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rle-status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rle-status-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rle-status-name {
+  font-size: 0.75rem;
+  color: #ccc;
+  text-transform: capitalize;
+}
+
+.rle-status-bar-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.rle-status-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.rle-status-conf {
+  font-size: 0.75rem;
+  color: #aaa;
+  width: 35px;
+  text-align: right;
+}
+
+.rle-status-actions {
+  font-size: 0.7rem;
+  color: #666;
+  width: 35px;
+  text-align: right;
+}
+
+.rle-status-footer {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rle-status-team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #ccc;
+}
+
+.rle-team-bar {
+  flex: 1;
+}
+
+.rle-status-score {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #aaa;
+  text-align: center;
+}
