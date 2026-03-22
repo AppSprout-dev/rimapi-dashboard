@@ -8,6 +8,7 @@ import defaultBgImage from '@/assets/defaultBackground.jpg';
 // Hooks
 import { useRimWorldData } from '@/hooks/useRimworldData';
 import { useDashboardLayout } from '@/hooks/useDashboardLayout';
+import { useRleTickData } from '@/hooks/useRleTickData';
 
 // Types
 import { DashboardTab } from '@/types/dashboardTypes';
@@ -57,6 +58,12 @@ const CARD_DEFINITIONS: CardDefinition[] = [
   { id: 'topIncidents', title: 'Top Incidents', description: 'List of events with highest probability of occurring next.', icon: '🎲' },
   { id: 'timeControls', title: 'Time Controls', description: 'Manage game speed and pause state.', icon: '⏱️' },
   // { id: 'sseStatus', title: 'Connection Status', description: 'Debug info for API connection.', icon: '🔌' },
+  // RLE widgets
+  { id: 'rleAgentLog', title: 'RLE Agent Decisions', description: '6 AI agent action plans with confidence.', icon: '🤖' },
+  { id: 'rleScoreTimeline', title: 'RLE Score Timeline', description: 'Live 8-metric score chart over ticks.', icon: '📈' },
+  { id: 'rleConflictResolution', title: 'RLE Conflicts', description: 'Agent plan merging and action pipeline.', icon: '⚔️' },
+  { id: 'rleHelixPhase', title: 'RLE Helix Phase', description: 'Helix progression with agent positions.', icon: '🌀' },
+  { id: 'rleAgentStatus', title: 'RLE Agent Status', description: 'Confidence bars and team summary.', icon: '📊' },
 ];
 
 const RimWorldDashboard: React.FC<RimWorldDashboardProps> = ({
@@ -78,6 +85,9 @@ const RimWorldDashboard: React.FC<RimWorldDashboardProps> = ({
     savePreset, deletePreset, setSelectedPreset, presetBgImage, presetBgBlur,
     renamePreset, exportPresets, importPresets,
   } = useDashboardLayout();
+
+  // 2b. RLE tick data (polls localhost:9000/latest_tick.json when RLE is running)
+  const { tickData: rleTickData, scoreHistory: rleScoreHistory } = useRleTickData();
 
   // 3. Local UI State
   const [activeTab, setActiveTab] = useState<DashboardTab>('dashboard');
@@ -309,6 +319,8 @@ const RimWorldDashboard: React.FC<RimWorldDashboardProps> = ({
                           creatures={creatures}
                           getSortedColonists={getSortedColonists}
                           autoRefresh={isAutoRefreshEnabled}
+                          rleTickData={rleTickData}
+                          rleScoreHistory={rleScoreHistory}
                         />
                       </div>
                       <div className="react-resizable-handle" />

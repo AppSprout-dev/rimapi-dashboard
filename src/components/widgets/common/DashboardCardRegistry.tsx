@@ -20,6 +20,14 @@ import OreListCard from '../map/OreListCard';
 import TopIncidentsCard from '../TopIncidentsCard';
 import TimeControlsCard from '../controls/TimeControlsCard';
 
+// RLE widgets
+import RleAgentDecisionLog from '../rle/RleAgentDecisionLog';
+import RleScoreTimeline from '../rle/RleScoreTimeline';
+import RleConflictResolution from '../rle/RleConflictResolution';
+import RleHelixPhase from '../rle/RleHelixPhase';
+import RleAgentStatusPanel from '../rle/RleAgentStatusPanel';
+import { RleTickData, RleScore } from '../rle/types';
+
 interface CardRegistryProps {
     item: Layout[number];
     data: RimWorldData;
@@ -33,12 +41,15 @@ interface CardRegistryProps {
     creatures: any;
     autoRefresh: boolean;
     getSortedColonists: (cols: any[], sort: 'name' | 'mood') => any[];
+    // RLE data (optional — only present when RLE game loop is running)
+    rleTickData?: RleTickData | null;
+    rleScoreHistory?: RleScore[];
 }
 
 export const DashboardCardRegistry: React.FC<CardRegistryProps> = ({
     item, data, cardSettings, onSettingsChange, onOpenSettings,
     colonists, resources, power, creatures, getSortedColonists,
-    autoRefresh
+    autoRefresh, rleTickData, rleScoreHistory,
 }) => {
 
     const cardId = item.i.split('_')[0];
@@ -191,6 +202,18 @@ export const DashboardCardRegistry: React.FC<CardRegistryProps> = ({
                     lastUpdated={new Date()}
                 />
             );
+
+        // RLE widgets
+        case 'rleAgentLog':
+            return <RleAgentDecisionLog tickData={rleTickData || null} />;
+        case 'rleScoreTimeline':
+            return <RleScoreTimeline scoreHistory={rleScoreHistory || []} />;
+        case 'rleConflictResolution':
+            return <RleConflictResolution tickData={rleTickData || null} />;
+        case 'rleHelixPhase':
+            return <RleHelixPhase tickData={rleTickData || null} />;
+        case 'rleAgentStatus':
+            return <RleAgentStatusPanel tickData={rleTickData || null} />;
 
         default:
             return <div className="chart-card"><h3>{cardId}</h3><p>Not implemented.</p></div>;
