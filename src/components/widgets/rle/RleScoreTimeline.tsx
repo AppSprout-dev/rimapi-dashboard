@@ -26,10 +26,13 @@ const RleScoreTimeline: React.FC<Props> = ({ scoreHistory }) => {
   const chartRef = useRef<Chart | null>(null);
 
   useEffect(() => {
-    if (!canvasRef.current || scoreHistory.length === 0) return;
+    const canvas = canvasRef.current;
+    if (!canvas || scoreHistory.length === 0) return;
+    if (!canvas.isConnected) return;
 
     if (chartRef.current) {
       chartRef.current.destroy();
+      chartRef.current = null;
     }
 
     const labels = scoreHistory.map((_, i) => `${i + 1}`);
@@ -54,7 +57,7 @@ const RleScoreTimeline: React.FC<Props> = ({ scoreHistory }) => {
       })),
     ];
 
-    chartRef.current = new Chart(canvasRef.current, {
+    chartRef.current = new Chart(canvas, {
       type: 'line',
       data: { labels, datasets },
       options: {
@@ -72,7 +75,10 @@ const RleScoreTimeline: React.FC<Props> = ({ scoreHistory }) => {
     });
 
     return () => {
-      chartRef.current?.destroy();
+      if (chartRef.current) {
+        chartRef.current.destroy();
+        chartRef.current = null;
+      }
     };
   }, [scoreHistory]);
 
