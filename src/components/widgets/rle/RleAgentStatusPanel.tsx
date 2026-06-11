@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import DashboardCard from '../common/DashboardCard';
 import { RleTickData, AGENT_DISPLAY, PHASE_COLORS } from './types';
 import './RleWidgets.css';
@@ -79,4 +79,4 @@ const RleAgentStatusPanel: React.FC<Props> = ({ tickData }) => {
   );
 };
 
-export default RleAgentStatusPanel;
+export default React.memo(RleAgentStatusPanel);

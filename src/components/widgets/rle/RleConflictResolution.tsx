@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import DashboardCard from '../common/DashboardCard';
 import { RleTickData, AGENT_DISPLAY } from './types';
 import './RleWidgets.css';
@@ -28,12 +28,12 @@ const RleConflictResolution: React.FC<Props> = ({ tickData }) => {
             <span className="rle-conflict-value">{totalProposed}</span>
             <span className="rle-conflict-label">proposed</span>
           </div>
-          <span className="rle-conflict-arrow">→</span>
+          <span className="rle-conflict-arrow">â†’</span>
           <div className="rle-conflict-stat">
             <span className="rle-conflict-value">{totalResolved}</span>
             <span className="rle-conflict-label">resolved</span>
           </div>
-          <span className="rle-conflict-arrow">→</span>
+          <span className="rle-conflict-arrow">â†’</span>
           <div className="rle-conflict-stat">
             <span className="rle-conflict-value">{tickData.execution.executed}</span>
             <span className="rle-conflict-label">executed</span>
@@ -76,4 +76,4 @@ const RleConflictResolution: React.FC<Props> = ({ tickData }) => {
   );
 };
 
-export default RleConflictResolution;
+export default React.memo(RleConflictResolution);

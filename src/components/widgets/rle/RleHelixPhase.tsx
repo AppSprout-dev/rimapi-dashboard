@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import DashboardCard from '../common/DashboardCard';
 import { RleTickData, AGENT_DISPLAY, PHASE_COLORS } from './types';
 import './RleWidgets.css';
@@ -98,4 +98,4 @@ const RleHelixPhase: React.FC<Props> = ({ tickData }) => {
   );
 };
 
-export default RleHelixPhase;
+export default React.memo(RleHelixPhase);

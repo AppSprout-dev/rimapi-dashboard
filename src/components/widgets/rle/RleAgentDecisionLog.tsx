@@ -41,7 +41,7 @@ const RleAgentDecisionLog: React.FC<Props> = ({ tickData }) => {
                   <div key={i} className="rle-action-item">
                     <span className="rle-action-type">{action.action_type}</span>
                     {action.target && (
-                      <span className="rle-action-target">→ {action.target}</span>
+                      <span className="rle-action-target">â†’ {action.target}</span>
                     )}
                     <span className="rle-action-priority">P{action.priority}</span>
                   </div>
@@ -58,4 +58,4 @@ const RleAgentDecisionLog: React.FC<Props> = ({ tickData }) => {
   );
 };
 
-export default RleAgentDecisionLog;
+export default React.memo(RleAgentDecisionLog);

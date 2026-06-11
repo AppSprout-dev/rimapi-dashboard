@@ -30,13 +30,36 @@ const RleScoreTimeline: React.FC<Props> = ({ scoreHistory }) => {
     if (!canvas || scoreHistory.length === 0) return;
     if (!canvas.isConnected) return;
 
-    if (chartRef.current) {
-      chartRef.current.destroy();
-      chartRef.current = null;
-    }
-
     const labels = scoreHistory.map((_, i) => `${i + 1}`);
     const metrics = Object.keys(scoreHistory[0]?.metrics || {});
+
+    // Update the existing chart in place — destroying and recreating it
+    // blanks the canvas for a frame, which reads as a visible flash on
+    // every tick (and on stream recordings).
+    const existing = chartRef.current;
+    if (existing) {
+      // Only update in place if the chart is still bound to the live canvas —
+      // React can swap the canvas element (remount, grid re-layout), leaving
+      // the chart attached to a detached node; update() then crashes in
+      // Chart._resize with "Cannot read properties of null (ownerDocument)".
+      if (
+        existing.canvas === canvas &&
+        existing.data.datasets.length === metrics.length + 1
+      ) {
+        existing.data.labels = labels;
+        existing.data.datasets[0].data = scoreHistory.map((s) => s.composite);
+        metrics.forEach((metric, i) => {
+          existing.data.datasets[i + 1].data = scoreHistory.map(
+            (s) => s.metrics[metric] || 0
+          );
+        });
+        existing.update('none');
+        return;
+      }
+      // Stale canvas or changed metric set — rebuild from scratch.
+      existing.destroy();
+      chartRef.current = null;
+    }
 
     const datasets = [
       {
@@ -74,13 +97,18 @@ const RleScoreTimeline: React.FC<Props> = ({ scoreHistory }) => {
       },
     });
 
+  }, [scoreHistory]);
+
+  // Destroy only on unmount — a cleanup tied to scoreHistory would tear the
+  // chart down on every tick.
+  useEffect(() => {
     return () => {
       if (chartRef.current) {
         chartRef.current.destroy();
         chartRef.current = null;
       }
     };
-  }, [scoreHistory]);
+  }, []);
 
   return (
     <DashboardCard title="Score Timeline">
@@ -95,4 +123,4 @@ const RleScoreTimeline: React.FC<Props> = ({ scoreHistory }) => {
   );
 };
 
-export default RleScoreTimeline;
+export default React.memo(RleScoreTimeline);
