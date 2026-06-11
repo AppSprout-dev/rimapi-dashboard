@@ -14,6 +14,12 @@ export const useRimWorldData = (
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
     const hasLoadedDataOnce = useRef(false);
+    // Under heavy RIMAPI load (e.g. an RLE agent run) the occasional poll comes
+    // back with no colonists or a non-Playing state. Don't tear the dashboard
+    // down to the loading screen on a single blip — require several consecutive
+    // bad polls before signalling a real game-state change.
+    const consecutiveBadPolls = useRef(0);
+    const BAD_POLL_THRESHOLD = 3;
 
     // Set API Base URL whenever prop changes
     useEffect(() => {
@@ -28,15 +34,21 @@ export const useRimWorldData = (
             const rimWorldData = await fetchRimWorldData();
             
             // Game State Check
-            if (!rimWorldData.gameState || 
-                (rimWorldData.gameState as any).program_state !== 'Playing' || 
-                !rimWorldData.colonists || 
+            if (!rimWorldData.gameState ||
+                (rimWorldData.gameState as any).program_state !== 'Playing' ||
+                !rimWorldData.colonists ||
                 rimWorldData.colonists.length === 0
             ) {
-                onGameStateChange();
+                consecutiveBadPolls.current += 1;
+                // Only surface a real game-state change once we've loaded data
+                // before — otherwise debounce transient blips under load.
+                if (!hasLoadedDataOnce.current || consecutiveBadPolls.current >= BAD_POLL_THRESHOLD) {
+                    onGameStateChange();
+                }
                 return;
             }
 
+            consecutiveBadPolls.current = 0;
             hasLoadedDataOnce.current = true;
             setData(rimWorldData);
             setLastUpdated(new Date());

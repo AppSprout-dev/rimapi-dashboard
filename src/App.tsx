@@ -53,11 +53,13 @@ function App() {
           setGameStatus('menu');
         }
       } else {
-        setGameStatus('api_error');
+        // Don't drop a live dashboard to the connect screen on an empty
+        // response — only treat it as an error before we ever started playing.
+        setGameStatus(prev => prev === 'playing' ? prev : 'api_error');
       }
     } catch (error) {
       console.error("Error checking game state:", error);
-      setGameStatus('api_error');
+      setGameStatus(prev => prev === 'playing' ? prev : 'api_error');
     }
   }, []);
 

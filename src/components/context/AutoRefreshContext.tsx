@@ -12,6 +12,13 @@ const AutoRefreshContext = createContext<AutoRefreshContextType | undefined>(und
 export const AutoRefreshProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     // 1. INITIALIZE FROM LOCAL STORAGE
     const [isAutoRefreshEnabled, setIsAutoRefreshEnabled] = useState(() => {
+        // ?norefresh=1 forces auto-refresh off — used by the OBS/Playwright
+        // capture views, whose RLE widgets poll their own :9000 source. Without
+        // it the 5s main :8765 poll re-renders the container and repaints the
+        // background once per cycle (a visible flash on stream).
+        if (new URLSearchParams(globalThis.location.search).get('norefresh') === '1') {
+            return false;
+        }
         const saved = localStorage.getItem('rimworld_auto_refresh');
         // If nothing is saved, default to true. Otherwise parse "true"/"false"
         return saved !== null ? JSON.parse(saved) : true;
