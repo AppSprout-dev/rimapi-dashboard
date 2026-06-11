@@ -12,6 +12,41 @@ const INITIAL_LAYOUT: Layout = [
   { i: 'colonySummary', x: 8, y: 2, w: 4, h: 2, isBounded: true },
 ];
 
+// Built-in presets ship with the app so a fresh browser profile (OBS browser
+// source, headless Playwright) can select them via `?preset=<name>` without
+// any localStorage state. A user-saved preset with the same name wins.
+const BUILTIN_PRESETS: DashboardPreset[] = [
+  {
+    name: 'RLE Capture',
+    layout: [
+      { i: 'rleAgentStatus', x: 0, y: 0, w: 3, h: 2, isBounded: true },
+      { i: 'rleScoreTimeline', x: 3, y: 0, w: 6, h: 2, isBounded: true },
+      { i: 'rleHelixPhase', x: 9, y: 0, w: 3, h: 2, isBounded: true },
+      { i: 'rleAgentLog', x: 0, y: 2, w: 8, h: 3, isBounded: true },
+      { i: 'rleConflictResolution', x: 8, y: 2, w: 4, h: 3, isBounded: true },
+    ],
+    cardSettings: {},
+  },
+  {
+    name: 'RLE Vertical',
+    layout: [
+      { i: 'rleAgentStatus', x: 0, y: 0, w: 12, h: 2, isBounded: true },
+      { i: 'rleScoreTimeline', x: 0, y: 2, w: 12, h: 2, isBounded: true },
+      { i: 'rleAgentLog', x: 0, y: 4, w: 12, h: 3, isBounded: true },
+      { i: 'rleConflictResolution', x: 0, y: 7, w: 12, h: 2, isBounded: true },
+      { i: 'rleHelixPhase', x: 0, y: 9, w: 12, h: 2, isBounded: true },
+    ],
+    cardSettings: {},
+  },
+];
+
+const loadPresets = (): DashboardPreset[] => {
+  const saved = localStorage.getItem('dashboard_presets');
+  const userPresets: DashboardPreset[] = saved ? JSON.parse(saved) : [];
+  const userNames = new Set(userPresets.map(p => p.name));
+  return [...userPresets, ...BUILTIN_PRESETS.filter(p => !userNames.has(p.name))];
+};
+
 export const useDashboardLayout = () => {
   const { addToast } = useToast();
   
@@ -23,19 +58,15 @@ export const useDashboardLayout = () => {
   const [presetBgImage, setPresetBgImage] = useState<string | null>(null);
   const [presetBgBlur, setPresetBgBlur] = useState<number>(0);
   
-  const [presets, setPresets] = useState<DashboardPreset[]>(() => {
-    const saved = localStorage.getItem('dashboard_presets');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [presets, setPresets] = useState<DashboardPreset[]>(loadPresets);
 
   const [selectedPreset, setSelectedPreset] = useState<string>(() => {
+    const available = loadPresets();
+    // `?preset=<name>` (URL-driven capture browsers) beats the remembered one.
+    const fromUrl = new URLSearchParams(globalThis.location.search).get('preset');
+    if (fromUrl && available.some(p => p.name === fromUrl)) return fromUrl;
     const last = localStorage.getItem('last_selected_preset') || "";
-    const saved = localStorage.getItem('dashboard_presets');
-    if (last && saved) {
-      const parsed = JSON.parse(saved);
-      return parsed.some((p: any) => p.name === last) ? last : "";
-    }
-    return "";
+    return last && available.some(p => p.name === last) ? last : "";
   });
 
   const presetChangeRef = useRef(false);

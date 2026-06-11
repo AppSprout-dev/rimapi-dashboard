@@ -19,9 +19,13 @@ function App() {
   const [isConfigured, setIsConfigured] = useState(false);
   const [gameStatus, setGameStatus] = useState<GameStatus>('checking');
 
-  // Load configuration on startup
+  // Load configuration on startup.
+  // `?api=<url>` skips the setup screen entirely — used by headless/embedded
+  // browsers (OBS browser sources, Playwright capture) that have no saved
+  // localStorage config.
   useEffect(() => {
-    const savedUrl = localStorage.getItem('rimworldApiUrl');
+    const apiParam = new URLSearchParams(globalThis.location.search).get('api');
+    const savedUrl = apiParam?.replace(/\/$/, '') || localStorage.getItem('rimworldApiUrl');
     if (savedUrl) {
       setApiUrl(savedUrl);
       setApiBaseUrl(savedUrl);

@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# local static-serve junction for OBS capture (serve_build.ps1)
+serve_root/
